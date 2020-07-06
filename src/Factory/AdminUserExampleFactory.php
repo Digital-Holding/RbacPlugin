@@ -8,9 +8,13 @@ use Sylius\Bundle\CoreBundle\Fixture\Factory\AdminUserExampleFactory as BaseAdmi
 use Sylius\Bundle\CoreBundle\Fixture\Factory\ExampleFactoryInterface;
 use Sylius\Bundle\CoreBundle\Fixture\OptionsResolver\LazyOption;
 use Sylius\Component\Core\Model\AdminUserInterface;
+use Sylius\Component\Core\Model\AvatarImage;
+use Sylius\Component\Core\Uploader\ImageUploaderInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Sylius\RbacPlugin\Entity\AdministrationRoleInterface;
+use Symfony\Component\Config\FileLocatorInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class AdminUserExampleFactory extends BaseAdminUserExampleFactory implements ExampleFactoryInterface
@@ -21,14 +25,22 @@ final class AdminUserExampleFactory extends BaseAdminUserExampleFactory implemen
     /** @var OptionsResolver */
     private $optionsResolver;
 
+    /** @var FileLocatorInterface */
+    private $fileLocator;
+
+    /** @var ImageUploaderInterface */
+    private $imageUploader;
+
     public function __construct(
         FactoryInterface $userFactory,
         RepositoryInterface $administrationRoleRepository,
-        string $localeCode
+        string $localeCode,
+        FileLocatorInterface $fileLocator,
+        ImageUploaderInterface $imageUploader
     ) {
         $this->administrationRoleRepository = $administrationRoleRepository;
 
-        parent::__construct($userFactory, $localeCode);
+        parent::__construct($userFactory, $localeCode, $fileLocator, $imageUploader);
 
         $this->optionsResolver = new OptionsResolver();
 
